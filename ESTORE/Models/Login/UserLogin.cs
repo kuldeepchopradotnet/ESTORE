@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESTORE.Models
+namespace ESTORE.Models.Login
 {
     public class UserLogin
     {

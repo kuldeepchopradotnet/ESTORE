@@ -1,4 +1,4 @@
-﻿using ESTORE.Models;
+﻿using ESTORE.Models.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +32,7 @@ namespace ESTORE.Controllers
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] UserLogin userLogin)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -48,7 +48,8 @@ namespace ESTORE.Controllers
             }
             var getUserRoles = await _userManager.GetRolesAsync(user);
             var token = this.GenerateJwtToken(user.Id, userLogin.Email, getUserRoles);
-            return Ok(new { token });
+            var response = new LoginResponse { Token = token }; 
+            return Ok(response);
         }
 
 
