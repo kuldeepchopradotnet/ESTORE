@@ -1,4 +1,5 @@
 ﻿using ESTORE.Models.Login;
+using ESTORE.Models.Signup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,36 +55,37 @@ namespace ESTORE.Controllers
 
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp(string username, string password)
+        public async Task<IActionResult> SignUp([FromBody] SignupRequest signupRequest)
         {
-            var user = new IdentityUser {  UserName  = username, Email = username };            
 
-            var createdUser = await _userManager.CreateAsync(user, password);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var user = new IdentityUser {  UserName  = signupRequest.UserName, Email = signupRequest.Email };            
+            var createdUser = await _userManager.CreateAsync(user, signupRequest.Password);
             if (!createdUser.Succeeded)
             {
                 return BadRequest(createdUser.Errors);
             }
-
             var USER = "User";
             var role = await _roleManager.FindByNameAsync(USER);
             if (role == null)
             {
                 var roleIdentity = new IdentityRole { Name = USER };
-                var roleResult = await _roleManager.CreateAsync(roleIdentity);
+                await _roleManager.CreateAsync(roleIdentity);
             }
 
             var roles = new[] { USER };
-
             var addRoleResult = await _userManager.AddToRolesAsync(user, roles);
-
-           if (!addRoleResult.Succeeded) {
+            if (!addRoleResult.Succeeded) {
                 return BadRequest("Adding Role to user failed");
             }
-
-
             return Ok("You are registered successfully");
         }
+
+
 
         //what http verb or attributes, can we create custome attrubute, how?
 
