@@ -1,24 +1,29 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using DAL.Entities;
+using DAL.Repositories.ProductRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESTORE.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+   /* [Authorize]*/
     public class ProductController : ControllerBase
     {
-
-        public ProductController()
+        private readonly IProductRepository _productRepository;
+        public ProductController(IProductRepository productRepository)
         {
-                
+                _productRepository = productRepository; 
         }
 
         [HttpGet]
-        public ActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return Ok(new { id });
+            var result = await _productRepository.get(id);
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
        /* [HttpGet]
@@ -34,9 +39,11 @@ namespace ESTORE.Controllers
         }
 
         [HttpPost]
-        public ActionResult save()
+        public async Task<ActionResult> save(Product product)
         {
-            return Ok("saved");
+            await _productRepository.AddAsync(product);
+            await _productRepository.saveAsync();
+            return Ok(product.Id);
         }
 
         [HttpPut]

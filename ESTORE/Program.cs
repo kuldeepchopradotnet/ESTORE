@@ -6,6 +6,8 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ESTORE.Data;
+using DAL.Repositories.ProductRepository;
+using DAL.Repositories.BaseRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +78,11 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 var app = builder.Build();
 
