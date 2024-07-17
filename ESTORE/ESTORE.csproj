@@ -20,7 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Identity\" />
     <Folder Include="Pages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 
 </Project>
