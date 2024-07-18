@@ -18,7 +18,7 @@ namespace ESTORE.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _productRepository.get(id);
+            var result = await _productRepository.GetByIdAsync(id);
             if(result == null)
             {
                 return NotFound();
@@ -38,11 +38,27 @@ namespace ESTORE.Controllers
             return Ok("all product");
         }
 
+
+        [HttpGet("active")]
+        public async  Task<ActionResult> GetActiveAll()
+        {
+
+            var result = await _productRepository.getActiveProduct();
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+
+
         [HttpPost]
         public async Task<ActionResult> save(Product product)
         {
             await _productRepository.AddAsync(product);
-            await _productRepository.saveAsync();
+            await _productRepository.SaveAsync();
             return Ok(product.Id);
         }
 
@@ -50,6 +66,22 @@ namespace ESTORE.Controllers
         public ActionResult update()
         {
             return Ok("updated");
+        }
+
+
+
+        [HttpPut("Deactivate")]
+        public async Task<ActionResult> Deactivate(string id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+
+            if(product == null)
+            {
+                return NotFound(id);
+            }
+
+            var result = await _productRepository.DeactivateProduct(product);
+            return Ok(result);
         }
 
 
