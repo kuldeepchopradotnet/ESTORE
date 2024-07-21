@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ESTORE.Data;
 using DAL.Repositories.ProductRepository;
 using DAL.Repositories.BaseRepository;
+using DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,8 +81,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 
 var app = builder.Build();

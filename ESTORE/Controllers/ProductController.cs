@@ -1,12 +1,13 @@
 ﻿using DAL.Entities;
 using DAL.Repositories.ProductRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESTORE.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-   /* [Authorize]*/
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;

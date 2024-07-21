@@ -11,6 +11,8 @@ namespace DAL.Repositories.BaseRepository
     {
         public Task<T?> GetByIdAsync(string id);
 
+        public Task<T?> GetByIdAsync(int id);
+
         public Task AddAsync(T entity);
 
         public Task<int> SaveAsync();

@@ -29,5 +29,10 @@ namespace DAL.Entities
 
         public bool IsActive { get; set; } = true;
 
+        public Product()
+        {
+            Id = new Guid().ToString();
+        }
+
     }
 }
