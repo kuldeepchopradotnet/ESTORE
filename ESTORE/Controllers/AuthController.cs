@@ -115,7 +115,7 @@ namespace ESTORE.Controllers
                 new Claim(JwtRegisteredClaimNames.Email, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, uid),
-                //new Claim("Permissions", "Order:Read")
+                new Claim("Permissions", "Order:Read")
             };
 
             foreach (var role in roles)

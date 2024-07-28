@@ -51,7 +51,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers(options =>
 {
     // options.Filters.Add<LoggerFilter>();
-    options.Filters.Add<CheckAccessFilter>();
+    //options.Filters.Add<CheckAccessFilter>();
 });
 
 
@@ -90,6 +90,9 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddScoped<LoggerFilter>();
+builder.Services.AddScoped<CheckAccessAuthFilter>();
+
+
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();

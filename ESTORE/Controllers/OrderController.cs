@@ -25,9 +25,15 @@ namespace ESTORE.Controllers
         }
 
         /* [ServiceFilter(typeof(LoggerFilter))]*/
+        /*        [AllowAccess("Order:Read")]
+                [ServiceFilter(typeof(CheckAccessAuthFilter))]*/
 
-        [Description("Retreive Order by Order id")]
-        [AllowAccess("Order:Read")]
+        //[Description("Retreive Order by Order id")]
+
+        //[TypeFilter(typeof(CheckAccessAuthFilter), Arguments = new object[] { "Permission", "Order:Read" })]
+
+
+        [CheckAccessAttrFilter("Order:Read")]
         [HttpGet]
         public async Task< IActionResult> get(int id)
         {

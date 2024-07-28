@@ -20,6 +20,7 @@ namespace ESTORE.Filters
 
                 if (myAttr != null)
                 {
+
                     var user = context.HttpContext.User;
                     var permissions = user.FindFirst("Permissions")?.Value;
 
