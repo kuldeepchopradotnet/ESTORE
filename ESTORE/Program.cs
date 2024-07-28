@@ -11,6 +11,8 @@ using DAL.Repositories.BaseRepository;
 using DAL.Repositories;
 using ESTORE.Middlewares;
 using ESTORE.Filters;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,11 +57,16 @@ builder.Services.AddControllers(options =>
 });
 
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100MB
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+   // options.OperationFilter<FileOperationFilter>();
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
 
     // Add security definition for JWT Bearer
@@ -87,6 +94,9 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
+
+
+
 });
 
 builder.Services.AddScoped<LoggerFilter>();

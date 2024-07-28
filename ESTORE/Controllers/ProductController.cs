@@ -1,13 +1,15 @@
 ﻿using DAL.Entities;
 using DAL.Repositories.ProductRepository;
+using ESTORE.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace ESTORE.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -56,12 +58,56 @@ namespace ESTORE.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> save(Product product)
+        public async Task<ActionResult> save([FromForm] AddProduct model)
         {
+
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var file = model.file;
+            if(file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            var filePath = Path.Combine("Uploads", file.FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var product = new Product
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Quantity = model.Quantity,
+                Price = model.Price,
+            };
+
             await _productRepository.AddAsync(product);
             await _productRepository.SaveAsync();
             return Ok(product.Id);
         }
+
+        [HttpGet("download")]
+        public ActionResult Download(string name = "cq5dam.web.1280.1280.png")
+        {
+            var filepath = Path.Combine("Uploads", name);
+
+
+            if (!System.IO.File.Exists(filepath))
+            {
+                return BadRequest("File not exists");
+            }
+
+            var reader = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+
+            return File(reader, "application/octastream", name);
+
+        }
+
 
         [HttpPut]
         public ActionResult update()

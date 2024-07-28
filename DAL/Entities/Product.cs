@@ -12,7 +12,7 @@ namespace DAL.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -31,7 +31,7 @@ namespace DAL.Entities
 
         public Product()
         {
-            Id = new Guid().ToString();
+            Id = Guid.NewGuid().ToString();
         }
 
     }
