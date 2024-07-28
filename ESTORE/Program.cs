@@ -9,6 +9,8 @@ using ESTORE.Data;
 using DAL.Repositories.ProductRepository;
 using DAL.Repositories.BaseRepository;
 using DAL.Repositories;
+using ESTORE.Middlewares;
+using ESTORE.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +48,14 @@ builder.Services.AddAuthorization();
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // options.Filters.Add<LoggerFilter>();
+    options.Filters.Add<CheckAccessFilter>();
+});
+
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -80,7 +89,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
+builder.Services.AddScoped<LoggerFilter>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -89,9 +98,6 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -99,9 +105,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseExceptions();
 
+app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseLoggin();
 
 app.MapControllers();
 

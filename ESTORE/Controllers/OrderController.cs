@@ -1,12 +1,17 @@
 ﻿using DAL.Entities;
 using DAL.Repositories;
+using ESTORE.Attributes;
+using ESTORE.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESTORE.Controllers
 {
+  
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class OrderController : Controller
     {
 
@@ -19,10 +24,14 @@ namespace ESTORE.Controllers
 
         }
 
+        /* [ServiceFilter(typeof(LoggerFilter))]*/
+
+        [Description("Retreive Order by Order id")]
+        [AllowAccess("Order:Read")]
         [HttpGet]
-        public async Task< IActionResult> get()
+        public async Task< IActionResult> get(int id)
         {
-            var result = await this._orderRepository.GetByIdAsync(1);
+            var result = await this._orderRepository.GetByIdAsync(id);
             if(result == null) {
                 return NotFound();
             }
